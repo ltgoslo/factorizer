@@ -275,7 +275,7 @@ class Factorizer:
     def load_inverse_vocab(self):
         self.id_to_subword = np.zeros((256, 256, 256), dtype=object)
         for subword, (_, index_1, index_2, index_3) in self.trie.iteritems():
-            self.id_to_subword[index_1, index_2, index_3] = subword
+            self.id_to_subword[index_1, index_2, index_3] = bytes_to_subword(subword)
 
     def encode(self, text: Union[str, List[str]]) -> Union[Encoding, List[Encoding]]:
         if isinstance(text, (list, tuple)):
@@ -326,7 +326,7 @@ class Factorizer:
                 output.append(" [UNK] ")
                 continue
 
-            subword = subword.replace("[BOW]", " ").replace("[EOW]", " ")
+            subword = subword.replace("⸥", " ").replace("⸤", " ")
             output.append(subword)
 
         return ' '.join(''.join(output).split())
@@ -353,7 +353,5 @@ class Factorizer:
                     return Encoding([self.unk_id], ["[UNK]"], [float("-inf")], [(0, len(word))])
                 else:
                     ids[i] = self.unk_id
-            subwords[i] = subwords[i].replace("[BOW]", '⸥')
-            subwords[i] = subwords[i].replace("[EOW]", '⸤')
 
         return Encoding(ids, subwords, perplexities, offsets)
