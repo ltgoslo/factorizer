@@ -55,7 +55,7 @@ def bytes_to_subword(b: str):
     return decoded
 
 
-def optimal_search(trie, word, alpha=1.0, beta=0.0, add_bow=True, add_eow=True, sample=False):
+def optimal_search(trie, word, alpha=0.1, sigma=0.0, add_bow=True, add_eow=True, sample=False):
     alignment, encoded_word = [], []
 
     if add_bow:
@@ -76,11 +76,11 @@ def optimal_search(trie, word, alpha=1.0, beta=0.0, add_bow=True, add_eow=True, 
     alignment += [len(word)]
     encoded_word = ''.join(encoded_word)
 
-    if beta == 0.0:
+    if sigma == 0.0:
         return dijkstra(trie, encoded_word, alignment, alpha)
 
     for _ in range(16):
-        encoding = dijkstra_beta(trie, encoded_word, alignment, alpha, beta, sample=sample)
+        encoding = dijkstra_sigma(trie, encoded_word, alignment, alpha, sigma, sample=sample)
         if encoding[1][0].startswith("⸥") and encoding[1][-1].endswith("⸤"):
             return encoding
 
@@ -91,7 +91,7 @@ class OOVException(Exception):
     pass
 
 
-def dijkstra_beta(trie, word, alignment, alpha, beta, sample: True):
+def dijkstra_sigma(trie, word, alignment, alpha, sigma, sample: True):
     if len(word) > 32:
         raise OOVException()
 
@@ -111,7 +111,7 @@ def dijkstra_beta(trie, word, alignment, alpha, beta, sample: True):
             break
 
         for prefix in trie.prefixes(min_node.suffix)[::-1]:
-            noise = beta * len(prefix) * (torch.randn([]).exp().item())
+            noise = sigma * len(prefix) * (torch.randn([]).exp().item())
             suffix = min_node.suffix[len(prefix):]
 
             if suffix != '' and '' in all_nodes and min_node.cost + noise + 2*alpha >= all_nodes[''].cost:
@@ -243,7 +243,7 @@ def dijkstra(trie, word, alignment, alpha):
 
 
 class Factorizer:
-    def __init__(self, tokenizer_path: str, alpha=1.0, beta=0.0, merge_unks=True, allow_decoding=False, sample=False):
+    def __init__(self, tokenizer_path: str, alpha=0.1, sigma=0.0, merge_unks=True, allow_decoding=False, sample=False):
         self.special_id_to_token = ["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]", "[SOS]", "[EOS]", "[SPECIAL]"]
         self.special_token_to_id = {token: i for i, token in enumerate(self.special_id_to_token)}
         self.unk_id = (self.special_token_to_id["[UNK]"], self.special_token_to_id["[PAD]"], self.special_token_to_id["[PAD]"])
@@ -261,7 +261,7 @@ class Factorizer:
         self.trie = dawg.RecordDAWG("fBBB", payload_separator=b'\xff').load(tokenizer_path)
 
         self.alpha = alpha
-        self.beta = beta
+        self.sigma = sigma
         self.merge_unks = merge_unks
         self.sample = sample
 
@@ -269,7 +269,7 @@ class Factorizer:
         if allow_decoding:
             self.load_inverse_vocab()
 
-    def __call__(self, text: Union[str, List[str]]):
+    def __call__(self, text: Union[str, List[str]]) -> Union[Encoding, List[Encoding]]:
         return self.encode(text)
 
     def load_inverse_vocab(self):
@@ -285,7 +285,7 @@ class Factorizer:
 
         ids, subwords, perplexities, offsets = [], [], [], []
         for word, start, end in whitespace_split(text):
-            if self.beta == 0.0:
+            if self.sigma == 0.0:
                 output = self.tokenize_word_cached(word)
             else:
                 output = self.tokenize_word(word)
@@ -300,7 +300,7 @@ class Factorizer:
 
         return Encoding(ids, subwords, perplexities, offsets)
 
-    def decode(self, indices: Union[List[Tuple[int]], List[List[Tuple[int]]]], skip_special_tokens=True) -> Union[str, List[str]]:
+    def decode(self, indices: Union[List[Tuple[int, int, int]], List[List[Tuple[int, int, int]]]], skip_special_tokens=True) -> Union[str, List[str]]:
         if not self.allow_decoding:
             self.load_inverse_vocab()
             self.allow_decoding = True
@@ -340,7 +340,7 @@ class Factorizer:
             return Encoding([self.unk_id], [word], [float("-inf")], [(0, len(word))])
 
         try:
-            result = optimal_search(self.trie, word, self.alpha, self.beta, add_bow, add_eow, self.sample)
+            result = optimal_search(self.trie, word, self.alpha, self.sigma, add_bow, add_eow, self.sample)
         except OOVException:
             return Encoding([self.unk_id], [word], [float("-inf")], [(0, len(word))])
 
