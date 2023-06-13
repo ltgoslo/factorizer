@@ -31,6 +31,20 @@ python3 setup.py install
 
 <br>
 
+## Pretrained factorizer models
+
+| **Language**    | **URL**         |
+| :-------------- | :-------------- |
+| Arabic (`ar`)          | [`arabic.dawg` (191 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/arabic.dawg) |
+| Chinese (`zh`)         | [`chinese.dawg` (180 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/chinese.dawg)) |
+| Czech (`cs`)           | [`czech.dawg` (158 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/czech.dawg) |
+| English (`en`)         | [`english.dawg` (129 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/english.dawg) |
+| Norwegian (`no`)       | [`norwegian.dawg` (186 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/norwegian.dawg) |
+| Scottish Gaelic (`gd`) | [`gaelic.dawg` (187 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/gaelic.dawg) |
+| Turkish (`tr`)         | [`turkish.dawg` (206 MB)](https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/turkish.dawg) |
+
+<br>
+
 ## Usage
 
 ```python
