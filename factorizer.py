@@ -92,9 +92,6 @@ class OOVException(Exception):
 
 
 def dijkstra_sigma(trie, word, alignment, alpha, sigma, sample: True):
-    if len(word) > 32:
-        raise OOVException()
-
     initial_node = Node(word, 0.0, None, None)
     open_nodes = [initial_node]
     all_nodes = {initial_node.suffix: initial_node}
@@ -180,9 +177,6 @@ def dijkstra_sigma(trie, word, alignment, alpha, sigma, sample: True):
 
 
 def dijkstra(trie, word, alignment, alpha):
-    if len(word) > 32:
-        raise OOVException()
-
     initial_node = Node(word, 0.0, None, None)
     open_nodes = [initial_node]
     all_nodes = {initial_node.suffix: initial_node}
