@@ -14,7 +14,7 @@
 <br>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2303.09859"><b>Paper (arXiv)</b></a><br><br>
+  <a href="https://arxiv.org/abs/2306.07764"><b>Paper (arXiv)</b></a><br><br>
 </p>
 
 _______
@@ -129,5 +129,12 @@ Takes the factorized indices and decodes them back to string (also accepts a bat
 
 ## Please cite the following publication (just arXiv for now)
 ```bibtex
-
+@misc{samuel2023tokenization,
+      title={Tokenization with Factorized Subword Encoding}, 
+      author={David Samuel and Lilja Øvrelid},
+      year={2023},
+      eprint={2306.07764},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
