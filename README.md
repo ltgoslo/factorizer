@@ -129,12 +129,21 @@ Takes the factorized indices and decodes them back to string (also accepts a bat
 
 ## Please cite the following publication (just arXiv for now)
 ```bibtex
-@misc{samuel2023tokenization,
-      title={Tokenization with Factorized Subword Encoding}, 
-      author={David Samuel and Lilja Øvrelid},
-      year={2023},
-      eprint={2306.07764},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{samuel-ovrelid-2023-tokenization,
+    title = "Tokenization with Factorized Subword Encoding",
+    author = "Samuel, David  and
+      {\O}vrelid, Lilja",
+    editor = "Rogers, Anna  and
+      Boyd-Graber, Jordan  and
+      Okazaki, Naoaki",
+    booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
+    month = jul,
+    year = "2023",
+    address = "Toronto, Canada",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2023.findings-acl.890",
+    doi = "10.18653/v1/2023.findings-acl.890",
+    pages = "14143--14161",
+    abstract = "In recent years, language models have become increasingly larger and more complex. However, the input representations for these models continue to rely on simple and greedy subword tokenization methods. In this paper, we propose a novel tokenization method that factorizes subwords onto discrete triplets using a VQ-VAE model. The effectiveness of the proposed tokenization method, referred to as the Factorizer, is evaluated on language modeling and morpho-syntactic tasks for 7 diverse languages. Results indicate that this method is more appropriate and robust for morphological tasks than the commonly used byte-pair encoding (BPE) tokenization algorithm.",
 }
 ```
