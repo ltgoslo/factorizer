@@ -68,10 +68,9 @@ if __name__ == "__main__":
     wandb.init(name=f"{args.language}_regularized_{args.hidden_size}_{args.seed}", config=args, project="vae-tokenizer")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    language_code = {"czech": "ces", "english": "eng", "norwegian": "nor"}[args.language]
-    train_dataset = Dataset(args, path=f"data/{language_code}_train_word_freq.txt", vocab=None, random=True, split=True)
-    valid_dataset = Dataset(args, path=f"data/{language_code}_valid_word_freq.txt", vocab=train_dataset.vocab, split=False, remove_long_words=True)
-    frequent_dataset = Dataset(args, path=f"data/{language_code}_frequent_word_freq.txt", vocab=train_dataset.vocab, split=False, remove_long_words=True)
+    train_dataset = Dataset(args, path=f"data/{args.language}_train_word_freq.txt", vocab=None, random=True, split=True)
+    valid_dataset = Dataset(args, path=f"data/{args.language}_valid_word_freq.txt", vocab=train_dataset.vocab, split=False, remove_long_words=True)
+    frequent_dataset = Dataset(args, path=f"data/{args.language}_frequent_word_freq.txt", vocab=train_dataset.vocab, split=False, remove_long_words=True)
 
     train_sampler = WeightedRandomSampler(
         [freq / math.log(freq + 1) for freq in train_dataset.freqs],
