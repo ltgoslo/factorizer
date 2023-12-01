@@ -127,7 +127,7 @@ Takes the factorized indices and decodes them back to string (also accepts a bat
 <br>
 
 
-## Please cite the following publication (just arXiv for now)
+## Please cite the following publication
 ```bibtex
 @inproceedings{samuel-ovrelid-2023-tokenization,
     title = "Tokenization with Factorized Subword Encoding",
